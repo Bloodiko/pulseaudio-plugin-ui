@@ -15,6 +15,15 @@ public:
     frmMain(QWidget *parent = nullptr);
     ~frmMain();
 
+private slots:
+    void on_actionAdd_New_Element_triggered();
+
+    void on_btnClear_clicked();
+
+    void on_btnReadSink_clicked();
+
+    void on_btnReadSink_2_clicked();
+
 private:
     Ui::frmMain *ui;
 };
