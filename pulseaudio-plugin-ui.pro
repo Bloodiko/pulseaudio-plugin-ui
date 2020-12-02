@@ -29,3 +29,16 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+
+# Custom added - for development until figuring out which is needed, and which not
+# loding all pulselibs, just in case i could need them.
+
+unix: CONFIG += link_pkgconfig
+unix: PKGCONFIG += libpulse
+
+unix: CONFIG += link_pkgconfig
+unix: PKGCONFIG += libpulse-mainloop-glib
+
+unix: CONFIG += link_pkgconfig
+unix: PKGCONFIG += libpulse-simple

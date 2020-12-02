@@ -1,7 +1,10 @@
 #include "frmmain.h"
 #include "ui_frmmain.h"
-#include <iostream>
-#include <QProcess>
+#include <pulse/introspect.h>
+#include <pulse/context.h>
+#include <pulse/mainloop-api.h>
+#include <pulse/mainloop.h>
+
 
 frmMain::frmMain(QWidget *parent)
     : QMainWindow(parent)
@@ -14,50 +17,42 @@ frmMain::~frmMain()
 {
     delete ui;
 }
-
+/*
+class stateService
+{
+public:
+    stateService() {}
+};
+*/
 
 void frmMain::on_actionAdd_New_Element_triggered()
 {
 
 }
 
-void frmMain::on_btnClear_clicked()
+void papuiCallback(pa_context *c, void *userdata)
 {
-    ui->tbTestOutput->clear();
+    QString success = "Success";
 }
 
 void frmMain::on_btnReadSink_clicked()
 {
 
-    //Use Process to get all available Sinks
 
-    QString output;
-    QProcess process;
-    process.start("pactl list sinks");
-    process.waitForFinished();
-    output = process.readAllStandardOutput();
+    pa_mainloop *papuiLoop = pa_mainloop_new();
+    pa_mainloop_api *papuiLoopApi = pa_mainloop_get_api(papuiLoop);
 
-    //TMP: Show Output in TextBrowser (dbg reason)
-    ui->tbTestOutput->setText(output);
-    QString err=process.readAllStandardError();
-    ui->tbErrorBox->setText(err);
+    pa_context *papuiContext = pa_context_new(papuiLoopApi, "papuiContext");
+    pa_context_set_state_callback(papuiContext, papuiCallback, NULL);
+    int valReturn = pa_context_connect(papuiContext, NULL, (pa_context_flags_t)0, NULL);
+    ui->tbTestOutput->setText(QString::number(valReturn));
 
-    //creating Object from standart input stream
-    QObject objSinks;
-
-
-
+    /** QString sinks = pa_context_get_sink_info_list();
+     *  ui->tbTestOutput->setText(sinks);
+     */
 }
 
-void frmMain::on_btnReadSink_2_clicked()
+void frmMain::on_btnClear_clicked()
 {
-    QString output;
-    QProcess process;
-    process.start("pactl list sources");
-    process.waitForFinished();
-    output = process.readAllStandardOutput();
-    ui->tbTestOutput->setText(output);
-    QString err=process.readAllStandardError();
-    ui->tbErrorBox->setText(err);
+    ui->label_4->clear();
 }
-
